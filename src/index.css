@@ -229,6 +229,11 @@ form.itemStyle {
   border-bottom-right-radius: 0.5em;
 }
 
+.itemDone {
+  text-decoration: line-through;
+  color: var(--clr-light-grayish-blue);
+}
+
 .itemStyle {
   padding: 0;
   margin: 0;
@@ -263,6 +268,15 @@ form.itemStyle {
   justify-content: center;
   gap: 1.5rem;
   border-radius: 0.5em;
+}
+
+.clearButton {
+  cursor: pointer;
+  transition: all 50ms linear;
+}
+.clearButton:hover {
+  opacity: 90%;
+  transform: scale(1.05);
 }
 
 footer {
