@@ -1,52 +1,24 @@
 import darkIcon from './assets/images/icon-moon.svg';
 import crossIcon from './assets/images/icon-cross.svg';
-import React, { useRef, useState } from 'react';
-
-type TodoItem = {
-  id: number | null;
-  body: string;
-  done: boolean;
-};
+import React, { useEffect, useRef, useState } from 'react';
+import { TodoItem } from './helpers/types';
+import { getAllTodos, saveToLS } from './helpers/ls_helper';
+import { nanoid } from 'nanoid';
 
 const App = () => {
-  const [todoItems, setTodoItems] = useState<TodoItem[]>([
-    {
-      id: 1,
-      body: 'Complete online javascript course',
-      done: true,
-    },
-    {
-      id: 2,
-      body: 'Jog around the partk 3x',
-      done: false,
-    },
-    {
-      id: 3,
-      body: '10 minutes meditation',
-      done: false,
-    },
-    {
-      id: 4,
-      body: 'Read for 1 hour',
-      done: false,
-    },
-    {
-      id: 5,
-      body: 'Pick up groceries',
-      done: false,
-    },
-    {
-      id: 6,
-      body: 'Complete Todo App on Frontend Mentor',
-      done: false,
-    },
-  ]);
+  const [todoItems, setTodoItems] = useState<TodoItem[]>(() => getAllTodos());
 
   const [newTodo, setNewTodo] = useState<TodoItem>({
-    id: null,
+    id: '',
     body: '',
     done: false,
   });
+
+  const [activeTab, setActiveTab] = useState('all');
+
+  useEffect(() => {
+    saveToLS(todoItems);
+  }, [todoItems]);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -55,16 +27,16 @@ const App = () => {
 
   const createNew = (e: React.FormEvent) => {
     e.preventDefault();
-    setNewTodo((prev) => ({ ...prev, id: todoItems.length + 1 }));
-    setTodoItems((prev) => [...prev, newTodo]);
+    const id = nanoid();
+
+    setTodoItems((prev) => [...prev, { ...newTodo, id }]);
+    inputRef.current?.blur();
 
     setNewTodo({
-      id: null,
+      id,
       body: '',
       done: false,
     });
-
-    inputRef.current?.blur();
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,27 +50,51 @@ const App = () => {
     });
   };
 
-  const markAsDone = (id: number) => {
-    const updatedItems = todoItems.map((item) =>
-      item.id === id ? { ...item, done: !item.done } : item
+  const handleDone = (id: string) => {
+    const updated = todoItems.map((todo) =>
+      todo.id === id ? { ...todo, done: !todo.done } : todo
     );
-
-    setTodoItems(updatedItems);
+    setTodoItems(updated);
   };
 
-  const clearCompleted = () => {
+  const handleClearCompleted = () => {
     setTodoItems(unfinished);
   };
 
+  const handleRemove = (id: string) => {
+    const items = [...todoItems];
+    const itemIndex = items.findIndex((item) => item.id === id);
+    items.splice(itemIndex, 1);
+    setTodoItems(items);
+  };
+
+  const setFilter = (e: React.MouseEvent) => {
+    const filter = (e.target as HTMLSpanElement).id;
+    setActiveTab(filter);
+  };
+
   const todoElements = todoItems.map((todo) => (
-    <li className="itemStyle" key={todo.id}>
+    <li
+      className={`
+      itemStyle 
+      ${todo.done ? 'itemDone' : 'itemPending'}
+      ${activeTab}
+      `}
+      key={todo.id}
+    >
       <input
         type="checkbox"
         checked={todo.done}
-        onChange={() => markAsDone(todo.id)}
+        onChange={() => handleDone(todo.id)}
       />
-      <p className={`${todo.done && 'itemDone'}`}>{todo.body}</p>
-      <img src={crossIcon} alt="close button" />
+      <p>{todo.body}</p>
+      <img
+        src={crossIcon}
+        alt="close button"
+        role="button"
+        className="asButton hideOnDesktop"
+        onClick={() => handleRemove(todo.id)}
+      />
     </li>
   ));
 
@@ -129,21 +125,54 @@ const App = () => {
       <ul className="todoItems shadow">
         {todoElements}
         <div className="itemStyle status">
-          <span>{notDoneCount} items left</span>{' '}
-          <span className="clearButton" role="button" onClick={clearCompleted}>
+          <span>{notDoneCount} items left</span>
+          {newFunction(setFilter, activeTab, ['hideOnMobile'])}
+          <span
+            className="asButton"
+            role="button"
+            onClick={handleClearCompleted}
+          >
             Clear completed
           </span>
         </div>
       </ul>
 
-      <div className="itemStyle filter">
-        <span>All</span>
-        <span>Active</span>
-        <span>Completed</span>
-      </div>
+      {newFunction(setFilter, activeTab, ['hideOnDesktop', 'itemStyle'])}
 
       <footer>Drag and drop to reorder list</footer>
     </main>
   );
 };
+function newFunction(
+  setFilter: (e: React.MouseEvent) => void,
+  activeTab: string,
+  classList?: string[]
+) {
+  return (
+    <div className={`filter ${classList?.join(' ')}`} onClick={setFilter}>
+      <span
+        role="button"
+        className={`asButton ${activeTab === 'all' ? 'active' : ''}`}
+        id="all"
+      >
+        All
+      </span>
+      <span
+        role="button"
+        className={`asButton ${activeTab === 'active' ? 'active' : ''}`}
+        id="active"
+      >
+        Active
+      </span>
+      <span
+        role="button"
+        className={`asButton ${activeTab === 'completed' ? 'active' : ''}`}
+        id="completed"
+      >
+        Completed
+      </span>
+    </div>
+  );
+}
+
 export default App;
