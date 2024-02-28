@@ -1,35 +1,77 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import lightIcon from './assets/images/icon-sun.svg';
+import darkIcon from './assets/images/icon-moon.svg';
+import crossIcon from './assets/images/icon-cross.svg';
 
-function App() {
-  const [count, setCount] = useState(0)
+const todoItems = [
+  {
+    id: 1,
+    body: 'Complete online javascript course',
+    done: true,
+  },
+  {
+    id: 2,
+    body: 'Jog around the partk 3x',
+    done: false,
+  },
+  {
+    id: 3,
+    body: '10 minutes meditation',
+    done: false,
+  },
+  {
+    id: 4,
+    body: 'Read for 1 hour',
+    done: false,
+  },
+  {
+    id: 5,
+    body: 'Pick up groceries',
+    done: false,
+  },
+  {
+    id: 6,
+    body: 'Complete Todo App on Frontend Mentor',
+    done: false,
+  },
+];
+
+const App = () => {
+  const todoElements = todoItems.map((todo) => (
+    <li className="itemStyle" key={todo.id}>
+      <input type="checkbox" id="" />
+      <p>{todo.body}</p>
+      <img src={crossIcon} alt="close button" />
+    </li>
+  ));
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <main>
+      <header>
+        <h1>TODO</h1>
+        <img src={darkIcon} alt="" />
+      </header>
 
-export default App
+      <form className="itemStyle">
+        <input type="checkbox" />
+        <input type="text" placeholder="Create a new todo..." />
+        {/* TODO: Remove inline style */}
+      </form>
+
+      <ul className="todoItems shadow">
+        {todoElements}
+        <div className="itemStyle status">
+          <span>5 items left</span> <span>Clear completed</span>
+        </div>
+      </ul>
+
+      <div className="itemStyle filter">
+        <span>All</span>
+        <span>Active</span>
+        <span>Completed</span>
+      </div>
+
+      <footer>Drag and drop to reorder list</footer>
+    </main>
+  );
+};
+export default App;

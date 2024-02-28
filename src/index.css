@@ -89,28 +89,184 @@ textarea:not([rows]) {
 :root {
   /* colors */
   --clr-bright-blue: hsl(220 98% 61%);
-  --clr-check-grad: linear-gradient hsl(192 100% 67%) to hsl(280 87% 65%);
+  --clr-check-grad: linear-gradient(hsl(192 100% 67%), hsl(280 87% 65%));
 
   /* colors light */
 
-  --Very-Light-Gray: hsl(0, 0%, 98%);
-  --Very-Light-Grayish-Blue: hsl(236, 33%, 92%);
-  --Light-Grayish-Blue: hsl(233, 11%, 84%);
-  --Dark-Grayish-Blue: hsl(236, 9%, 61%);
-  --Very-Dark-Grayish-Blue: hsl(235, 19%, 35%);
+  --clr-very-light-gray: hsl(0, 0%, 98%);
+  --clr-very-light-grayish-blue: hsl(236, 33%, 92%);
+  --clr-light-grayish-blue: hsl(233, 11%, 84%);
+  --clr-dark-grayish-blue: hsl(236, 9%, 61%);
+  --clr-very-dark-grayish-blue: hsl(235, 19%, 35%);
 
   /* colors dark */
 
-  --Very-Dark-Blue: hsl(235, 21%, 11%);
-  --Very-Dark-Desaturated-Blue: hsl(235, 24%, 19%);
-  --Light-Grayish-Blue: hsl(234, 39%, 85%);
-  --Light-Grayish-Blue-hover: hsl(236, 33%, 92%);
-  --Dark-Grayish-Blue: hsl(234, 11%, 52%);
-  --Very-Dark-Grayish-Blue: hsl(233, 14%, 35%);
-  --Very-Dark-Grayish-Blue: hsl(237, 14%, 26%);
+  --clr-very-dark-blue: hsl(235, 21%, 11%);
+  --clr-very-dark-desaturated-blue: hsl(235, 24%, 19%);
+  --clr-light-grayish-blue: hsl(234, 39%, 85%);
+  --clr-light-grayish-blue-hover: hsl(236, 33%, 92%);
+  --clr-dark-grayish-blue: hsl(234, 11%, 52%);
+  --clr-very-dark-grayish-blue: hsl(233, 14%, 35%);
+  --clr-very-dark-grayish-blue: hsl(237, 14%, 26%);
 
   /* font */
   --ff-primary: 'Josefin Sans', sans-serif;
 
   --fs-body: 18px;
+
+  /* body */
+  --bg-image: url('./assets/images/bg-mobile-light.jpg');
+}
+
+body {
+  background-color: var(--clr-very-light-grayish-blue);
+  background-image: var(--bg-image);
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-size: contain;
+
+  font-family: var(--ff-primary);
+  /* font-size: var(--fs-body); */ /*TODO: Set body font size*/
+  color: var(--clr-very-dark-grayish-blue);
+}
+
+main {
+  margin-inline: 1.5rem;
+}
+
+header {
+  margin-block: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  color: var(--clr-very-light-gray);
+  letter-spacing: 0.5rem;
+}
+
+input[type='text'] {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  border: none;
+  outline: none;
+}
+
+/* #region Checkbox styles */
+
+input[type='checkbox'] {
+  left: 1rem;
+  aspect-ratio: 1;
+}
+
+input[type='checkbox'] {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #fff;
+  margin: 0;
+  font: inherit;
+  color: currentColor;
+  width: 1.5em;
+  height: 1.5em;
+  border: 0.05em solid var(--clr-dark-grayish-blue);
+  border-radius: 50%;
+  transform: translateY(-0.025em);
+  accent-color: var(--clr-check-grad);
+
+  display: grid;
+  place-items: center;
+}
+
+input[type='checkbox']:checked {
+  background: var(--clr-check-grad);
+}
+
+input[type='checkbox']::before {
+  content: '';
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  pointer-events: none;
+  background-image: url('./assets/images/icon-check.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: none;
+}
+
+input[type='checkbox']:checked::before {
+  display: block;
+}
+
+/* #endregion */
+
+.shadow {
+  -webkit-box-shadow: 0px 0px 41px -11px var(--clr-dark-grayish-blue);
+  -moz-box-shadow: 0px 0px 41px -11px var(--clr-dark-grayish-blue);
+  box-shadow: 0px 0px 41px -11px var(--clr-dark-grayish-blue);
+}
+
+form.itemStyle {
+  border-radius: 0.5em;
+}
+
+.todoItems {
+  margin: 0;
+  padding: 0;
+  margin-block: 1.3rem;
+}
+
+.todoItems > :first-child {
+  border-top-left-radius: 0.5em;
+  border-top-right-radius: 0.5em;
+}
+.todoItems > :last-child {
+  border-bottom-left-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
+}
+
+.itemStyle {
+  padding: 0;
+  margin: 0;
+  padding-inline: 1rem;
+  padding-block: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  list-style-type: none;
+  background-color: white;
+}
+
+.itemStyle > img {
+  margin-inline-start: auto;
+}
+
+.itemStyle + .itemStyle {
+  border-top: 1px solid var(--clr-light-grayish-blue);
+}
+
+.itemStyle.status {
+  justify-content: space-between;
+  font-size: 1rem;
+}
+
+.filter {
+  font-weight: bold;
+  font-size: var(--fs-body);
+}
+
+.itemStyle.filter {
+  justify-content: center;
+  gap: 1.5rem;
+  border-radius: 0.5em;
+}
+
+footer {
+  color: var(--clr-dark-grayish-blue);
+  margin-block: 3rem;
+  text-align: center;
 }
