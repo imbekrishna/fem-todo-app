@@ -13,9 +13,13 @@ import {
   DndContext,
   closestCenter,
   KeyboardSensor,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   useSensor,
   useSensors,
+  DragEndEvent,
+  DragStartEvent,
+  UniqueIdentifier,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -28,9 +32,23 @@ const App = () => {
   // #region DNDKit
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(MouseSensor, {
+      // Require the mouse to move by 10 pixels before activating
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+    useSensor(TouchSensor, {
+      // Press delay of 250ms, with tolerance of 5px of movement
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
+
+  const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
 
   // #endregion
 
@@ -120,21 +138,23 @@ const App = () => {
     />
   ));
 
-  function handleDragEnd(event) {
+  function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
-    console.log(active.id, over.id);
-    if (active.id !== over.id) {
+    if (active.id !== over?.id) {
       setTodoItems((items) => {
         const oldIndex = items.findIndex((item) => item.id === active.id);
-        const newIndex = items.findIndex((item) => item.id === over.id);
-
-        console.log(oldIndex, newIndex);
-
+        const newIndex = items.findIndex((item) => item.id === over?.id);
         return arrayMove(items, oldIndex, newIndex);
       });
     }
-  }
 
+    setActiveId(null);
+  }
+  function handleDragStart(event: DragStartEvent) {
+    const { active } = event;
+
+    setActiveId(active.id);
+  }
   return (
     <main>
       <header>
@@ -164,36 +184,36 @@ const App = () => {
         />
       </form>
 
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <ul className="todoItems shadow">
+      <ul className="todoItems shadow">
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+        >
           <SortableContext
             items={todoItems}
             strategy={verticalListSortingStrategy}
           >
             {todoElements}
           </SortableContext>
-          <div className="itemStyle status">
-            <span>{notDoneCount} items left</span>
-            <FilterList
-              setFilter={setFilter}
-              activeTab={activeTab}
-              classList={['hideOnMobile']}
-            />
-            <span
-              className="asButton"
-              role="button"
-              onClick={handleClearCompleted}
-            >
-              Clear completed
-            </span>
-          </div>
-        </ul>
-      </DndContext>
-
+        </DndContext>
+        <div className="itemStyle status">
+          <span>{notDoneCount} items left</span>
+          <FilterList
+            setFilter={setFilter}
+            activeTab={activeTab}
+            classList={['hideOnMobile']}
+          />
+          <span
+            className="asButton"
+            role="button"
+            onClick={handleClearCompleted}
+          >
+            Clear completed
+          </span>
+        </div>
+      </ul>
       <FilterList
         setFilter={setFilter}
         activeTab={activeTab}
