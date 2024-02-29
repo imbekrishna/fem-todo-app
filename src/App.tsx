@@ -1,4 +1,5 @@
 import darkIcon from './assets/images/icon-moon.svg';
+import lightIcon from './assets/images/icon-sun.svg';
 import crossIcon from './assets/images/icon-cross.svg';
 import React, { useEffect, useRef, useState } from 'react';
 import { TodoItem } from './helpers/types';
@@ -6,6 +7,14 @@ import { getAllTodos, saveToLS } from './helpers/ls_helper';
 import { nanoid } from 'nanoid';
 
 const App = () => {
+  const defaultDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  const [isDark, setIsDark] = useState(defaultDark);
+
+  useEffect(() => {
+    document.body.classList.toggle('dark');
+  }, [isDark]);
+
   const [todoItems, setTodoItems] = useState<TodoItem[]>(() => getAllTodos());
 
   const [newTodo, setNewTodo] = useState<TodoItem>({
@@ -102,7 +111,12 @@ const App = () => {
     <main data-theme="dark">
       <header>
         <h1>TODO</h1>
-        <img src={darkIcon} alt="" />
+        <img
+          src={isDark ? darkIcon : lightIcon}
+          alt=""
+          role="button"
+          onClick={() => setIsDark((prev) => !prev)}
+        />
       </header>
 
       <form className="itemStyle" onSubmit={createNew}>
