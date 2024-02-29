@@ -1,14 +1,39 @@
 import darkIcon from './assets/images/icon-moon.svg';
 import lightIcon from './assets/images/icon-sun.svg';
 
-import React, { useEffect, useRef, useState } from 'react';
-import { TodoItem } from './helpers/types';
-import { getAllTodos, saveToLS } from './helpers/ls_helper';
 import { nanoid } from 'nanoid';
+import React, { useEffect, useRef, useState } from 'react';
 import FilterList from './components/FilterList';
 import ListItem from './components/ListItem';
+import { getAllTodos, saveToLS } from './helpers/ls_helper';
+import { TodoItem } from './helpers/types';
+
+// React DND kit
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 
 const App = () => {
+  // #region DNDKit
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
+
+  // #endregion
+
   const defaultDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
   const [isDark, setIsDark] = useState(defaultDark);
@@ -86,6 +111,7 @@ const App = () => {
 
   const todoElements = todoItems.map((todo) => (
     <ListItem
+      id={todo.id}
       key={todo.id}
       todo={todo}
       activeTab={activeTab}
@@ -93,6 +119,21 @@ const App = () => {
       handleRemove={handleRemove}
     />
   ));
+
+  function handleDragEnd(event) {
+    const { active, over } = event;
+    console.log(active.id, over.id);
+    if (active.id !== over.id) {
+      setTodoItems((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over.id);
+
+        console.log(oldIndex, newIndex);
+
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  }
 
   return (
     <main>
@@ -123,24 +164,35 @@ const App = () => {
         />
       </form>
 
-      <ul className="todoItems shadow">
-        {todoElements}
-        <div className="itemStyle status">
-          <span>{notDoneCount} items left</span>
-          <FilterList
-            setFilter={setFilter}
-            activeTab={activeTab}
-            classList={['hideOnMobile']}
-          />
-          <span
-            className="asButton"
-            role="button"
-            onClick={handleClearCompleted}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <ul className="todoItems shadow">
+          <SortableContext
+            items={todoItems}
+            strategy={verticalListSortingStrategy}
           >
-            Clear completed
-          </span>
-        </div>
-      </ul>
+            {todoElements}
+          </SortableContext>
+          <div className="itemStyle status">
+            <span>{notDoneCount} items left</span>
+            <FilterList
+              setFilter={setFilter}
+              activeTab={activeTab}
+              classList={['hideOnMobile']}
+            />
+            <span
+              className="asButton"
+              role="button"
+              onClick={handleClearCompleted}
+            >
+              Clear completed
+            </span>
+          </div>
+        </ul>
+      </DndContext>
 
       <FilterList
         setFilter={setFilter}
