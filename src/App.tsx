@@ -1,10 +1,12 @@
 import darkIcon from './assets/images/icon-moon.svg';
 import lightIcon from './assets/images/icon-sun.svg';
-import crossIcon from './assets/images/icon-cross.svg';
+
 import React, { useEffect, useRef, useState } from 'react';
 import { TodoItem } from './helpers/types';
 import { getAllTodos, saveToLS } from './helpers/ls_helper';
 import { nanoid } from 'nanoid';
+import FilterList from './components/FilterList';
+import ListItem from './components/ListItem';
 
 const App = () => {
   const defaultDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -83,32 +85,16 @@ const App = () => {
   };
 
   const todoElements = todoItems.map((todo) => (
-    <li
-      className={`
-      itemStyle 
-      ${todo.done ? 'itemDone' : 'itemPending'}
-      ${activeTab}
-      `}
-      key={todo.id}
-    >
-      <input
-        type="checkbox"
-        checked={todo.done}
-        onChange={() => handleDone(todo.id)}
-      />
-      <p>{todo.body}</p>
-      <img
-        src={crossIcon}
-        alt="close button"
-        role="button"
-        className="asButton hideOnDesktop"
-        onClick={() => handleRemove(todo.id)}
-      />
-    </li>
+    <ListItem
+      todo={todo}
+      activeTab={activeTab}
+      handleDone={handleDone}
+      handleRemove={handleRemove}
+    />
   ));
 
   return (
-    <main data-theme="dark">
+    <main>
       <header>
         <h1>TODO</h1>
         <img
@@ -140,7 +126,11 @@ const App = () => {
         {todoElements}
         <div className="itemStyle status">
           <span>{notDoneCount} items left</span>
-          {newFunction(setFilter, activeTab, ['hideOnMobile'])}
+          <FilterList
+            setFilter={setFilter}
+            activeTab={activeTab}
+            classList={['hideOnMobile']}
+          />
           <span
             className="asButton"
             role="button"
@@ -151,42 +141,15 @@ const App = () => {
         </div>
       </ul>
 
-      {newFunction(setFilter, activeTab, ['hideOnDesktop', 'itemStyle'])}
+      <FilterList
+        setFilter={setFilter}
+        activeTab={activeTab}
+        classList={['hideOnDesktop', 'itemStyle']}
+      />
 
       <footer>Drag and drop to reorder list</footer>
     </main>
   );
 };
-function newFunction(
-  setFilter: (e: React.MouseEvent) => void,
-  activeTab: string,
-  classList?: string[]
-) {
-  return (
-    <div className={`filter ${classList?.join(' ')}`} onClick={setFilter}>
-      <span
-        role="button"
-        className={`asButton ${activeTab === 'all' ? 'active' : ''}`}
-        id="all"
-      >
-        All
-      </span>
-      <span
-        role="button"
-        className={`asButton ${activeTab === 'active' ? 'active' : ''}`}
-        id="active"
-      >
-        Active
-      </span>
-      <span
-        role="button"
-        className={`asButton ${activeTab === 'completed' ? 'active' : ''}`}
-        id="completed"
-      >
-        Completed
-      </span>
-    </div>
-  );
-}
 
 export default App;
