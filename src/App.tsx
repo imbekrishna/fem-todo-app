@@ -18,8 +18,6 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
-  DragStartEvent,
-  UniqueIdentifier,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -47,8 +45,6 @@ const App = () => {
     }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
-
-  const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
 
   // #endregion
 
@@ -147,13 +143,6 @@ const App = () => {
         return arrayMove(items, oldIndex, newIndex);
       });
     }
-
-    setActiveId(null);
-  }
-  function handleDragStart(event: DragStartEvent) {
-    const { active } = event;
-
-    setActiveId(active.id);
   }
   return (
     <main>
@@ -188,7 +177,6 @@ const App = () => {
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
-          onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
           <SortableContext
