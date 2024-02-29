@@ -86,6 +86,7 @@ const App = () => {
 
   const todoElements = todoItems.map((todo) => (
     <ListItem
+      key={todo.id}
       todo={todo}
       activeTab={activeTab}
       handleDone={handleDone}

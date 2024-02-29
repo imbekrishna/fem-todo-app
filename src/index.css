@@ -141,6 +141,10 @@ main {
   padding-inline: 1rem;
   flex: 1;
   margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  max-width: 600px;
 }
 
 header {
@@ -337,8 +341,7 @@ footer {
   }
 
   main {
-    margin-top: 5em;
-    min-width: 600px;
+    margin-top: 10%;
   }
 
   .hideOnDesktop {
@@ -360,6 +363,6 @@ footer {
 
 @media screen and (min-width: 1400px) {
   main {
-    margin-top: 33%;
+    margin-top: 30%;
   }
 }
