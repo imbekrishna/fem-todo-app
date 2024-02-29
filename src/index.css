@@ -88,38 +88,39 @@ textarea:not([rows]) {
 
 :root {
   /* colors */
-  --clr-bright-blue: hsl(220 98% 61%);
+  --clr-accent: hsl(220 98% 61%);
   --clr-check-grad: linear-gradient(hsl(192 100% 67%), hsl(280 87% 65%));
 
   /* colors light */
 
-  --clr-very-light-gray: hsl(0, 0%, 98%);
-  --clr-very-light-grayish-blue: hsl(236, 33%, 92%);
+  --clr-body-bg: hsl(236, 33%, 92%);
+  --clr-text-done: hsl(236, 9%, 61%);
+  --clr-text: hsl(235, 19%, 35%);
   --clr-light-grayish-blue: hsl(233, 11%, 84%);
-  --clr-dark-grayish-blue: hsl(236, 9%, 61%);
-  --clr-very-dark-grayish-blue: hsl(235, 19%, 35%);
-
-  /* colors dark */
-
-  --clr-very-dark-blue: hsl(235, 21%, 11%);
-  --clr-very-dark-desaturated-blue: hsl(235, 24%, 19%);
-  --clr-light-grayish-blue: hsl(234, 39%, 85%);
-  --clr-light-grayish-blue-hover: hsl(236, 33%, 92%);
-  --clr-dark-grayish-blue: hsl(234, 11%, 52%);
-  --clr-very-dark-grayish-blue: hsl(233, 14%, 35%);
-  --clr-very-dark-grayish-blue: hsl(237, 14%, 26%);
+  --clr-item-bg: hsl(0, 0%, 98%);
 
   /* font */
   --ff-primary: 'Josefin Sans', sans-serif;
-
   --fs-body: 18px;
 
   /* body */
   --bg-image: url('./assets/images/bg-mobile-light.jpg');
 }
+@media (prefers-color-scheme: dark) {
+  /* colors dark */
+  :root {
+    --clr-body-bg: hsl(235, 21%, 11%);
+    --clr-item-bg: hsl(235, 24%, 19%);
+    --clr-light-grayish-blue: hsl(234, 39%, 85%);
+    --clr-text: hsl(236, 33%, 92%);
+    --clr-dark-grayish-blue: hsl(234, 11%, 52%);
+    --clr-text-done: hsl(233, 14%, 35%);
+    --clr-very-dark-grayish-blue: hsl(237, 14%, 26%);
+  }
+}
 
 body {
-  background-color: var(--clr-very-light-grayish-blue);
+  background-color: var(--clr-body-bg);
   background-image: var(--bg-image);
   background-repeat: no-repeat;
   background-position: 0 0;
@@ -127,7 +128,7 @@ body {
 
   font-family: var(--ff-primary);
   /* font-size: var(--fs-body); */ /*TODO: Set body font size*/
-  color: var(--clr-very-dark-grayish-blue);
+  color: var(--clr-text);
 
   display: flex;
   justify-content: center;
@@ -157,6 +158,12 @@ input[type='text'] {
   width: 100%;
   border: none;
   outline: none;
+  background-color: var(--clr-item-bg);
+}
+
+input[type='text']::placeholder {
+  /* FIXME: Update color */
+  color: var(--clr-text-done);
 }
 
 /* #region Checkbox styles */
@@ -169,13 +176,13 @@ input[type='checkbox'] {
 input[type='checkbox'] {
   -webkit-appearance: none;
   appearance: none;
-  background-color: #fff;
+  background-color: var(--clr-item-bg);
   margin: 0;
   font: inherit;
   color: currentColor;
   width: 1.5em;
   height: 1.5em;
-  border: 0.05em solid var(--clr-dark-grayish-blue);
+  border: 0.05em solid var(--clr-text-done);
   border-radius: 50%;
   transform: translateY(-0.025em);
   accent-color: var(--clr-check-grad);
@@ -210,13 +217,13 @@ input[type='checkbox']:checked::before {
 /* #endregion */
 
 .shadow {
-  -webkit-box-shadow: 0px 0px 41px -11px var(--clr-dark-grayish-blue);
-  -moz-box-shadow: 0px 0px 41px -11px var(--clr-dark-grayish-blue);
-  box-shadow: 0px 0px 41px -11px var(--clr-dark-grayish-blue);
+  -webkit-box-shadow: 0px 0px 41px -11px var(--clr-body-bg);
+  -moz-box-shadow: 0px 0px 41px -11px var(--clr-body-bg);
+  box-shadow: 0px 0px 41px -11px var(--clr-body-bg);
 }
 
 .filter .active {
-  color: var(--clr-bright-blue);
+  color: var(--clr-accent);
 }
 
 form.itemStyle {
@@ -240,7 +247,7 @@ form.itemStyle {
 
 .itemDone {
   text-decoration: line-through;
-  color: var(--clr-light-grayish-blue);
+  color: var(--clr-text-done);
 }
 
 .itemDone.active,
@@ -257,7 +264,7 @@ form.itemStyle {
   align-items: center;
   gap: 0.8rem;
   list-style-type: none;
-  background-color: white;
+  background-color: var(--clr-item-bg);
 }
 
 .itemStyle > img {
@@ -293,7 +300,7 @@ form.itemStyle {
 }
 
 footer {
-  color: var(--clr-dark-grayish-blue);
+  color: var(--clr-text-done);
   margin-block: 3rem;
   text-align: center;
 }

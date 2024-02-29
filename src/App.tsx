@@ -99,7 +99,7 @@ const App = () => {
   ));
 
   return (
-    <main>
+    <main data-theme="dark">
       <header>
         <h1>TODO</h1>
         <img src={darkIcon} alt="" />
