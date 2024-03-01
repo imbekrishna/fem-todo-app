@@ -259,8 +259,8 @@ form.itemStyle {
   margin-inline-start: auto;
 }
 
-.itemStyle + .itemStyle {
-  border-top: 1px solid var(--clr-divider);
+li.itemStyle {
+  border-bottom: 1px solid var(--clr-divider);
 }
 
 .itemStyle.status {
