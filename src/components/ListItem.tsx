@@ -2,6 +2,7 @@ import { TodoItem } from '../helpers/types';
 import crossIcon from '../assets/images/icon-cross.svg';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import Checkbox from './Checkbox';
 
 type ListItemProp = {
   id: string;
@@ -37,11 +38,7 @@ function ListItem({
       {...attributes}
       {...listeners}
     >
-      <input
-        type="checkbox"
-        checked={todo.done}
-        onChange={() => handleDone(todo.id)}
-      />
+      <Checkbox checked={todo.done} onChange={() => handleDone(todo.id)} />
       <p>{todo.body}</p>
       <img
         src={crossIcon}

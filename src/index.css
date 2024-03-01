@@ -128,7 +128,6 @@ body {
   background-size: contain;
 
   font-family: var(--ff-primary);
-  /* font-size: var(--fs-body); */ /*TODO: Set body font size*/
   color: var(--clr-text);
 
   display: flex;
@@ -171,57 +170,43 @@ input[type='text'] {
 }
 
 input[type='text']::placeholder {
-  /* FIXME: Update color */
   color: var(--clr-text-done);
 }
 
 /* #region Checkbox styles */
 
-input[type='checkbox'] {
-  left: 1rem;
-  cursor: pointer;
-  aspect-ratio: 1;
+.checkIcon {
+  transform: scale(0);
 }
 
-input[type='checkbox'] {
-  -webkit-appearance: none;
-  appearance: none;
-  background-color: var(--clr-item-bg);
-  margin: 0;
-  font: inherit;
-  color: currentColor;
-  width: 1.5em;
-  height: 1.5em;
-  border: 0.05em solid var(--clr-text-done);
+.checkbox {
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  border: solid 0.09rem var(--clr-divider);
   border-radius: 50%;
-  transform: translateY(-0.025em);
-  accent-color: var(--clr-check-grad);
+
+  background-origin: border-box;
+  background-clip: content-box, border-box;
 
   display: grid;
   place-items: center;
+
+  transition: all 50ms ease-in-out;
 }
 
-input[type='checkbox']:checked {
-  background: var(--clr-check-grad);
+.checkbox:hover {
+  border-color: transparent;
+  background-image: linear-gradient(var(--clr-item-bg), var(--clr-item-bg)),
+    var(--clr-check-grad);
 }
 
-input[type='checkbox']::before {
-  content: '';
-  position: absolute;
-  top: 55%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 60%;
-  height: 60%;
-  pointer-events: none;
-  background-image: url('./assets/images/icon-check.svg');
-  background-size: contain;
-  background-repeat: no-repeat;
-  display: none;
+.checkbox.checked {
+  border-color: transparent;
+  background-image: var(--clr-check-grad);
 }
 
-input[type='checkbox']:checked::before {
-  display: block;
+.checkbox.checked .checkIcon {
+  transform: scale(1);
 }
 
 /* #endregion */
@@ -244,15 +229,8 @@ form.itemStyle {
   margin: 0;
   padding: 0;
   margin-block: 1.3rem;
-}
-
-.todoItems > :first-child {
-  border-top-left-radius: 0.5em;
-  border-top-right-radius: 0.5em;
-}
-.todoItems > :last-child {
-  border-bottom-left-radius: 0.5em;
-  border-bottom-right-radius: 0.5em;
+  border-radius: 0.5em;
+  overflow: hidden;
 }
 
 .itemDone {
@@ -280,8 +258,6 @@ form.itemStyle {
 .itemStyle > img {
   margin-inline-start: auto;
 }
-
-/* FIXME: Border radius on active filter first child is not circular */
 
 .itemStyle + .itemStyle {
   border-top: 1px solid var(--clr-divider);
