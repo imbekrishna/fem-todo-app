@@ -3,6 +3,7 @@ import crossIcon from '../assets/images/icon-cross.svg';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import Checkbox from './Checkbox';
+import { memo } from 'react';
 
 type ListItemProp = {
   id: string;
@@ -51,4 +52,5 @@ function ListItem({
   );
 }
 
-export default ListItem;
+const MemoListItem = memo(ListItem);
+export default MemoListItem;
